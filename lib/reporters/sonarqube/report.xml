@@ -1,0 +1,16 @@
+<testExecutions version="1">
+    {{#each this.groups~}}
+    <file path="{{filename}}">
+        {{#each tests~}}
+        <testCase name="{{title}}" duration="{{time}}">
+            {{#if err~}}
+            <failure message="{{err.message}}" type="{{err.name}}">
+                <![CDATA[{{err.details}}]]>
+            </failure>
+            {{~/if~}}
+            {{~#if skipped~}}<skipped message="Skipped"/>{{/if}}
+        </testCase>
+        {{/each}}
+    </file>
+    {{/each}}
+</testExecutions>
