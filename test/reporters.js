@@ -1906,6 +1906,55 @@ describe('Reporter', () => {
         });
     });
 
+    describe('sonarqube', () => {
+
+        it('generates a report', (done) => {
+
+            const script = Lab.script();
+
+            script.__filename = 'test.js';
+
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    expect(true).to.equal(true);
+                });
+
+                script.test('skip', { skip: true }, () => {});
+
+                script.test('todo');
+
+                script.test('fails', () => {
+
+                    expect(true).to.equal(false);
+                });
+
+                script.test('fails with non-error', () => {
+
+                    return Promise.reject('boom');
+                });
+            });
+
+            Lab.report(script, { reporter: 'sonarqube', output: false }, (err, code, output) => {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                expect(output).to.contain([
+                    '<testCase name="test works"',
+                    '<testCase name="test fails"',
+                    '<failure message="Expected true to equal specified value: false" type="Error">',
+                    '<testCase name="test fails with non-error"',
+                    '<failure message="Non Error object received or caught" type="Error">',
+                    '<testCase name="test todo"',
+                    '<skipped message="Skipped"/>'
+                ]);
+
+                done();
+            });
+        });
+    });
+
     describe('lcov', () => {
 
         it('generates a lcov report', (done) => {
