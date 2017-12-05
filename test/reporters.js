@@ -1940,7 +1940,11 @@ describe('Reporter', () => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
+
+                console.log(output);
+
                 expect(output).to.contain([
+                    '<file path="test.js"',
                     '<testCase name="test works"',
                     '<testCase name="test fails"',
                     '<failure message="Expected true to equal specified value: false" type="Error">',
